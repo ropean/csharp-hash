@@ -24,6 +24,7 @@ dotnet run --project CSharpHash/CSharpHash.csproj
 Download the latest `CSharpHash.exe` from the [Releases](https://github.com/yourusername/csharp-hash/releases) page.
 
 **Requirements:**
+
 - Windows 10/11 (64-bit)
 - [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) pre-installed
 
@@ -44,6 +45,7 @@ scripts/build.cmd fd release
 ```
 
 Build script arguments:
+
 - `fd` or `framework-dependent`: Framework-dependent publishing (default)
 - `sc` or `self-contained`: Self-contained publishing
 - `debug`: Debug configuration
@@ -59,10 +61,25 @@ dotnet publish CSharpHash/CSharpHash.csproj --configuration Release --self-conta
 
 To create a new release:
 
-1. Update version numbers in `CSharpHash/CSharpHash.csproj`
-2. Commit your changes
-3. Create a git tag: `git tag v1.0.1`
-4. Push the tag: `git push origin v1.0.1`
-5. GitHub Actions will automatically build and publish the release
+1. Commit your changes
+2. Create a git tag: `git tag v1.0.1` (version automatically set from tag name)
+3. Push the tag: `git push origin v1.0.1`
+4. GitHub Actions will automatically build and publish the release
 
-The workflow will automatically publish the executable file to GitHub Releases.
+The workflow will:
+
+- Extract the version from the tag name (e.g., `v1.0.1` → version `1.0.1`)
+- Build the executable with that version
+- Publish the executable file to GitHub Releases
+
+**Tag Format**: Use `v{major}.{minor}.{patch}` format (e.g., `v1.2.3`)
+
+**Example**:
+
+```bash
+git add .
+git commit -m "Add new feature"
+git tag v1.0.1
+git push origin main
+git push origin v1.0.1  # This triggers the release build
+```

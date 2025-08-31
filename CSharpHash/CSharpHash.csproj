@@ -10,8 +10,32 @@
     <SelfContained>false</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+
+    <!-- Version Information -->
+    <Version Condition="'$(Version)' == ''">1.0.0</Version>
+    <Version Condition="'$(Version)' != ''">$(Version)</Version>
+    <AssemblyVersion>$(Version).0</AssemblyVersion>
+    <FileVersion>$(Version).0</FileVersion>
+
+    <!-- Assembly Information (shows in exe file properties) -->
+    <AssemblyTitle>C# Hash256</AssemblyTitle>
+    <AssemblyDescription>A lightweight SHA256 file hashing utility with drag-and-drop support</AssemblyDescription>
+    <AssemblyConfiguration>Release</AssemblyConfiguration>
+    <AssemblyCompany>CSharpHash</AssemblyCompany>
+    <AssemblyProduct>C# Hash256</AssemblyProduct>
+    <AssemblyCopyright>Copyright © 2024</AssemblyCopyright>
+    <AssemblyTrademark></AssemblyTrademark>
+    <AssemblyCulture></AssemblyCulture>
+
+    <!-- Additional metadata -->
+    <Product>C# Hash256</Product>
+    <Description>A lightweight SHA256 file hashing utility with drag-and-drop support</Description>
+    <Company>CSharpHash</Company>
+    <Copyright>Copyright © 2024</Copyright>
+    <PackageProjectUrl>https://github.com/ropean/csharp-hash</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/ropean/csharp-hash</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>hash,sha256,file,utility,checksum</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>

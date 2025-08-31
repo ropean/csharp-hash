@@ -72,12 +72,16 @@
                     <Run Text="{Binding LastPath, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock>
-                    <Run Text="Bytes: "/>
-                    <Run Text="{Binding LastBytes, Mode=OneWay}"/>
+                    <Run Text="Size: "/>
+                    <Run Text="{Binding LastBytesFormatted, Mode=OneWay}"/>
                 </TextBlock>
                 <TextBlock>
                     <Run Text="Elapsed: "/>
-                    <Run Text="{Binding LastElapsed, Mode=OneWay}"/>
+                    <Run Text="{Binding LastElapsedFormatted, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Throughput: "/>
+                    <Run Text="{Binding ThroughputFormatted, Mode=OneWay}"/>
                 </TextBlock>
             </StackPanel>
             <TextBlock Text="{Binding ErrorMessage, Mode=OneWay}" Foreground="Tomato" Visibility="{Binding HasError, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>

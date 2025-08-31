@@ -50,7 +50,11 @@ if errorlevel 1 goto :error
 
 rem Publish
 echo Publishing executable...
-dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
+if "%~5"=="" (
+    dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
+) else (
+    dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore %~5
+)
 if errorlevel 1 goto :error
 
 echo.

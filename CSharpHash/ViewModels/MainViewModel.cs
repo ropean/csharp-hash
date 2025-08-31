@@ -131,6 +131,8 @@ public sealed class MainViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(HasLastInfo));
                 OnPropertyChanged(nameof(ShowResultInfo));
+                OnPropertyChanged(nameof(LastElapsedFormatted));
+                OnPropertyChanged(nameof(ThroughputFormatted));
             }
         }
     }
@@ -145,6 +147,8 @@ public sealed class MainViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(HasLastInfo));
                 OnPropertyChanged(nameof(ShowResultInfo));
+                OnPropertyChanged(nameof(LastBytesFormatted));
+                OnPropertyChanged(nameof(ThroughputFormatted));
             }
         }
     }
@@ -190,12 +194,101 @@ public sealed class MainViewModel : BaseViewModel
     public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
     public bool ShowResultInfo => HasLastInfo && !IsHashing;
 
+    // Formatted properties for display
+    public string? LastBytesFormatted => LastBytes.HasValue ? FormatBytes(LastBytes.Value) : null;
+    public string? LastElapsedFormatted => LastElapsed.HasValue ? FormatTimeSpan(LastElapsed.Value) : null;
+    public string? ThroughputFormatted => (LastBytes.HasValue && LastElapsed.HasValue && LastElapsed.Value.TotalSeconds > 0)
+        ? FormatThroughput(LastBytes.Value, LastElapsed.Value) : null;
+
     public ICommand BrowseCommand { get; }
     public ICommand ClearCommand { get; }
     public ICommand CancelCommand { get; }
     public ICommand CopyHexCommand { get; }
     public ICommand CopyBase64Command { get; }
     public ICommand StartHashCommand { get; }
+
+    // Formatting helper methods
+    private static string FormatBytes(long bytes)
+    {
+        const double GB = 1_000_000_000; // Use decimal (1e9) as requested
+        const double MB = 1_000_000;     // Use decimal (1e6) as requested
+        const double KB = 1_000;         // Use decimal (1e3) for KB
+
+        if (bytes >= GB)
+        {
+            double gbValue = bytes / GB;
+            return $"{gbValue:N2} GB"; // Up to 2 decimals
+        }
+        else if (bytes >= MB)
+        {
+            double mbValue = bytes / MB;
+            return $"{mbValue:N2} MB"; // Up to 2 decimals
+        }
+        else if (bytes >= KB)
+        {
+            double kbValue = bytes / KB;
+            return $"{kbValue:N2} KB"; // Up to 2 decimals for KB
+        }
+        else
+        {
+            return $"{bytes:N0} bytes"; // Thousands separators, no decimals for bytes
+        }
+    }
+
+    private static string FormatTimeSpan(TimeSpan timeSpan)
+    {
+        double totalHours = timeSpan.TotalHours;
+        double totalMinutes = timeSpan.TotalMinutes;
+        double totalSeconds = timeSpan.TotalSeconds;
+        double totalMilliseconds = timeSpan.TotalMilliseconds;
+
+        if (totalHours >= 1)
+        {
+            return $"{totalHours:N2} h"; // Up to 2 decimals
+        }
+        else if (totalMinutes >= 1)
+        {
+            return $"{totalMinutes:N2} m"; // Up to 2 decimals
+        }
+        else if (totalSeconds >= 1)
+        {
+            return $"{totalSeconds:N2} s"; // Up to 2 decimals
+        }
+        else
+        {
+            return $"{totalMilliseconds:N0} ms"; // No decimals for milliseconds
+        }
+    }
+
+    private static string FormatThroughput(long bytes, TimeSpan elapsed)
+    {
+        if (elapsed.TotalSeconds <= 0) return "0 B/s";
+
+        double bytesPerSecond = bytes / elapsed.TotalSeconds;
+        const double GB = 1_000_000_000;
+        const double MB = 1_000_000;
+        const double KB = 1_000;
+
+        if (bytesPerSecond >= GB)
+        {
+            double gbPerSecond = bytesPerSecond / GB;
+            return $"{gbPerSecond:N2} GB/s"; // Up to 2 decimals
+        }
+        else if (bytesPerSecond >= MB)
+        {
+            double mbPerSecond = bytesPerSecond / MB;
+            return $"{mbPerSecond:N2} MB/s"; // Up to 2 decimals
+        }
+        else if (bytesPerSecond >= KB)
+        {
+            double kbPerSecond = bytesPerSecond / KB;
+            return $"{kbPerSecond:N2} KB/s"; // Up to 2 decimals
+        }
+        else
+        {
+            return $"{bytesPerSecond:N0} B/s"; // No decimals for bytes/second
+        }
+    }
 
     public MainViewModel()
     {

@@ -55,6 +55,9 @@ if "%~5"=="" (
 ) else (
     dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore %~5
 )
+
+rem Note: Icon is embedded in the executable via ApplicationIcon in .csproj
+echo Icon embedded in executable (no separate file needed).
 if errorlevel 1 goto :error
 
 echo.

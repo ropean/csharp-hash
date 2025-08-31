@@ -9,6 +9,7 @@ A simple WPF application for computing SHA256 hashes of files.
 - Auto-hash when file is selected
 - Copy hash results to clipboard
 - Cancel long-running hash operations
+- Professional icon and branding
 - Lightweight framework-dependent executable
 
 ## Usage
@@ -27,6 +28,10 @@ Download the latest `CSharpHash.exe` from the [Releases](https://github.com/your
 
 - Windows 10/11 (64-bit)
 - [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0/runtime) pre-installed
+
+**Features:**
+- Professional icon embedded in executable
+- Single-file deployment (no external dependencies needed)
 
 Simply download and run `CSharpHash.exe`!
 

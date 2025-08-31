@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Unit Formatting**: Added proper formatting for file sizes (bytes/KB/MB/GB), elapsed time (ms/s/m/h), and throughput (B/s/KB/s/MB/s/GB/s) with thousands separators and decimal precision
 - **Dynamic Versioning**: Wired git tag names into executable version numbers
 - **Assembly Information**: Added comprehensive exe file metadata (company, copyright, description, etc.)
+- **Application Icon**: Added professional icon embedded in executable (no separate file needed)
 
 ### Fixed
 

@@ -27,6 +27,9 @@
     <AssemblyTrademark></AssemblyTrademark>
     <AssemblyCulture></AssemblyCulture>
 
+    <!-- Application Icon -->
+    <ApplicationIcon>..\assets\app.ico</ApplicationIcon>
+
     <!-- Additional metadata -->
     <Product>C# Hash256</Product>
     <Description>A lightweight SHA256 file hashing utility with drag-and-drop support</Description>

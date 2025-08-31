@@ -17,6 +17,10 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = new MainViewModel();
+
+        // Note: Icon is embedded in executable via ApplicationIcon in .csproj
+        // WPF will automatically use the embedded icon for the window
+
         _titleTimer.Tick += (_, _) =>
         {
             if (DataContext is MainViewModel vm)
@@ -26,7 +30,7 @@ public partial class MainWindow : Window
         };
         _titleTimer.Start();
     }
-
+    
     private async void PathInput_KeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && DataContext is MainViewModel vm && File.Exists(vm.PathInput))

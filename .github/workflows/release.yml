@@ -2,22 +2,42 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name to create release for'
+        required: true
+        type: string
 
 jobs:
-  release:
+  build-and-release:
     runs-on: windows-latest
     permissions:
       contents: write
+      pull-requests: read
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - run: scripts/build.cmd fd release
+      - name: Build and Publish
+        run: scripts/build.cmd fd release /p:Version=${{ github.ref_name }}
 
-      - uses: softprops/action-gh-release@v2
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        id: create_release
         with:
-          files: ./publish/CSharpHash.exe
+          files: |
+            ./publish/CSharpHash.exe
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+        continue-on-error: false

@@ -2,7 +2,7 @@
 
 ## UI/UX Improvements
 
-- [ ] **File Path Recovery**: When clicking Cancel, the file path in file selector should also be recovered
+- [x] **File Path Recovery**: When clicking Cancel, the file path in file selector should also be recovered
 - [ ] **Window Positioning**: Start application in screen center
 - [ ] **Drag & Drop Enhancement**: Improve visual feedback during drag operations
 - [ ] **Dark/Light Theme**: Add theme switching capability

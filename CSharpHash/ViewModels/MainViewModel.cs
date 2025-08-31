@@ -28,12 +28,21 @@ public sealed class MainViewModel : BaseViewModel
         get => _pathInput;
         set
         {
-            if (SetProperty(ref _pathInput, value))
+            if (_pathInput != value) // Only capture if the path is actually changing
             {
-                OnPropertyChanged(nameof(HasPathInput));
-                if (AutoHash && File.Exists(_pathInput))
+                // Capture the previous path before changing it
+                if (!_isRestoringPath && !string.IsNullOrEmpty(_pathInput))
                 {
-                    _ = StartHashAsync();
+                    _lastCompletedPath = _pathInput;
+                }
+
+                if (SetProperty(ref _pathInput, value))
+                {
+                    OnPropertyChanged(nameof(HasPathInput));
+                    if (AutoHash && !_isRestoringPath && File.Exists(_pathInput))
+                    {
+                        _ = StartHashAsync();
+                    }
                 }
             }
         }
@@ -161,6 +170,9 @@ public sealed class MainViewModel : BaseViewModel
         private set => SetProperty(ref _previousPathBeforeHash, value);
     }
 
+    private bool _isRestoringPath;
+    private string? _lastCompletedPath;
+
     private string? _errorMessage;
     public string? ErrorMessage
     {
@@ -257,7 +269,7 @@ public sealed class MainViewModel : BaseViewModel
         }
 
         ErrorMessage = null;
-        PreviousPathBeforeHash = PathInput;
+        PreviousPathBeforeHash = _lastCompletedPath;
 
         // Snapshot current outputs to allow restoring on cancel
         _prevHexOutput = HexOutput;
@@ -314,11 +326,15 @@ public sealed class MainViewModel : BaseViewModel
             ProgressProcessedBytes = result.Bytes;
             HexOutput = Uppercase ? result.Hex.ToUpperInvariant() : result.Hex;
             Base64Output = result.Base64;
+            _lastCompletedPath = result.Path;
         }
         catch (OperationCanceledException)
         {
             // Restore previous path and previously displayed results on cancel
+            _isRestoringPath = true;
             PathInput = PreviousPathBeforeHash ?? PathInput;
+            _isRestoringPath = false;
+
             if (_prevLastPath != null || _prevLastBytes.HasValue || _prevLastElapsed.HasValue)
             {
                 LastPath = _prevLastPath;

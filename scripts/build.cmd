@@ -15,6 +15,8 @@ set OUTPUT_DIR=publish
 
 :parse_args
 if "%~1"=="" goto :build
+
+rem Parse arguments
 if /I "%~1"=="debug" set CONFIGURATION=Debug
 if /I "%~1"=="release" set CONFIGURATION=Release
 if /I "%~1"=="sc" set SELF_CONTAINED=true
@@ -50,10 +52,29 @@ if errorlevel 1 goto :error
 
 rem Publish
 echo Publishing executable...
-if "%~5"=="" (
+
+rem Publish with version handling
+if "%VERSION_TAG%"=="" (
+    echo No VERSION_TAG environment variable found, using default version
+    echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
     dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
 ) else (
-    dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore %~5
+    rem Trim whitespace from VERSION_TAG
+    for /f "tokens=* delims= " %%a in ("%VERSION_TAG%") do set VERSION_TAG_TRIMMED=%%a
+    if "!VERSION_TAG_TRIMMED!"=="" (
+        echo VERSION_TAG is empty/whitespace, using default version
+        echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
+        dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
+    ) else (
+        echo Using VERSION_TAG: !VERSION_TAG_TRIMMED!
+        echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore /p:Version=!VERSION_TAG_TRIMMED!
+        dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore /p:Version=!VERSION_TAG_TRIMMED!
+    )
+)
+
+if errorlevel 1 (
+    echo Publish failed with error %errorlevel%
+    goto :error
 )
 
 rem Note: Icon is embedded in the executable via ApplicationIcon in .csproj

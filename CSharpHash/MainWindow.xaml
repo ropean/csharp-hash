@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CSharpHash"
         mc:Ignorable="d"
         Title="C# Hash256" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
         AllowDrop="True"
         PreviewDragOver="Window_PreviewDragOver"
         Drop="Window_Drop">

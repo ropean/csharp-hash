@@ -7,6 +7,9 @@ echo Cleaning bin/obj...
 if exist CSharpHash\bin rmdir /s /q CSharpHash\bin
 if exist CSharpHash\obj rmdir /s /q CSharpHash\obj
 
+echo Cleaning publish directory...
+if exist publish rmdir /s /q publish
+
 echo Running dotnet clean...
 dotnet clean CSharpHash >nul 2>&1
 

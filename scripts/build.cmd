@@ -1,31 +1,73 @@
 @echo off
 setlocal enabledelayedexpansion
 
+echo === C# Hash256 Build Script ===
+echo.
+
 rem Navigate to repo root
 pushd "%~dp0.."
 
+rem Parse arguments
+set CONFIGURATION=Release
+set RUNTIME=win-x64
 set SELF_CONTAINED=false
+set OUTPUT_DIR=publish
+
+:parse_args
+if "%~1"=="" goto :build
+if /I "%~1"=="debug" set CONFIGURATION=Debug
+if /I "%~1"=="release" set CONFIGURATION=Release
 if /I "%~1"=="sc" set SELF_CONTAINED=true
 if /I "%~1"=="self-contained" set SELF_CONTAINED=true
+if /I "%~1"=="fd" set SELF_CONTAINED=false
+if /I "%~1"=="framework-dependent" set SELF_CONTAINED=false
+shift
+goto :parse_args
+
+:build
+echo Configuration: %CONFIGURATION%
+echo Runtime: %RUNTIME%
+echo Self-contained: %SELF_CONTAINED%
+echo Output directory: %OUTPUT_DIR%
+echo.
+
+rem Clean previous builds
+if exist "%OUTPUT_DIR%" rmdir /s /q "%OUTPUT_DIR%"
 
 rem Ensure no running instance is locking files
+echo Terminating any running CSharpHash.exe processes...
 taskkill /im CSharpHash.exe /f >nul 2>&1
 
-echo Publishing single-file (Release, win-x64, trim=off, self-contained=%SELF_CONTAINED%)...
-dotnet publish CSharpHash -c Release -r win-x64 -p:PublishSingleFile=true --self-contained %SELF_CONTAINED%
+rem Restore dependencies
+echo Restoring dependencies...
+dotnet restore CSharpHash/CSharpHash.csproj
+if errorlevel 1 goto :error
+
+rem Build
+echo Building project...
+dotnet build CSharpHash/CSharpHash.csproj -c %CONFIGURATION% --no-restore
+if errorlevel 1 goto :error
+
+rem Publish
+echo Publishing executable...
+dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
 if errorlevel 1 goto :error
 
 echo.
-echo Success. Output:
-for /f "delims=" %%A in ('powershell -NoProfile -Command "(Resolve-Path 'CSharpHash/bin/Release/net8.0-windows/win-x64/publish').Path"') do set PUBDIR=%%A
-echo   %PUBDIR%\
+echo === Build completed successfully! ===
+echo Output directory: %CD%\%OUTPUT_DIR%
+echo Files created:
+dir /b "%OUTPUT_DIR%"
+echo.
+echo To run: %OUTPUT_DIR%\CSharpHash.exe
 
 popd
 exit /b 0
 
 :error
 set ERR=%ERRORLEVEL%
-echo Build failed with errorlevel %ERR%.
+echo.
+echo === Build failed with error %ERR% ===
 popd
 exit /b %ERR%
 

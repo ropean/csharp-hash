@@ -40,6 +40,7 @@ packages/
 # Publish profiles and artifacts
 [Pp]ublishProfiles/
 artifacts/
+publish/
 
 # Cache / generated
 *.cache

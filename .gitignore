@@ -1,0 +1,62 @@
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.VC.opendb
+
+# VS Code
+.vscode/
+
+# JetBrains Rider / ReSharper
+.idea/
+.Rider*/
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Test results
+[Tt]est[Rr]esult*/
+[Tt]est[Rr]esults/
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+*.nuget.props
+*.nuget.targets
+
+# Publish profiles and artifacts
+[Pp]ublishProfiles/
+artifacts/
+
+# Cache / generated
+*.cache
+*.dbmdl
+*.jfm
+*.pdb
+*.mdb
+*.opendb
+
+# OS files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Node (if any tooling added later)
+node_modules/
+
+

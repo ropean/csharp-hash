@@ -1,0 +1,85 @@
+﻿<Window x:Class="CSharpHash.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CSharpHash"
+        mc:Ignorable="d"
+        Title="C# Hash256" Height="450" Width="800"
+        AllowDrop="True"
+        PreviewDragOver="Window_PreviewDragOver"
+        Drop="Window_Drop">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    </Window.Resources>
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBox Width="520" Text="{Binding PathInput, UpdateSourceTrigger=PropertyChanged}" KeyDown="PathInput_KeyDown"/>
+            <Button Content="Browse" Command="{Binding BrowseCommand}" Margin="8,0,0,0"/>
+            <Button Content="Clear" Command="{Binding ClearCommand}" Margin="8,0,0,0"/>
+            <Button Content="Cancel" Command="{Binding CancelCommand}" Margin="8,0,0,0" Visibility="{Binding IsHashing, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,8,0,8">
+            <CheckBox Content="Uppercase HEX" IsChecked="{Binding Uppercase}"/>
+            <CheckBox Content="Auto-hash on select" IsChecked="{Binding AutoHash}" Margin="16,0,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ProgressBar Grid.Row="0" Height="10" Minimum="0" Maximum="100" Value="{Binding ProgressPercent, Mode=OneWay}" Visibility="{Binding IsHashing, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+
+            <TextBlock Grid.Row="1" Text="HEX" FontWeight="Bold"/>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding HexOutput}" IsReadOnly="True" TextWrapping="Wrap"/>
+                <Button Grid.Column="1" Content="Copy" Command="{Binding CopyHexCommand}" Margin="8,0,0,0"/>
+            </Grid>
+
+            <TextBlock Grid.Row="3" Text="Base64" FontWeight="Bold" Margin="0,8,0,0"/>
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" Text="{Binding Base64Output}" IsReadOnly="True" TextWrapping="Wrap"/>
+                <Button Grid.Column="1" Content="Copy" Command="{Binding CopyBase64Command}" Margin="8,0,0,0"/>
+            </Grid>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Margin="0,8,0,0">
+            <StackPanel Visibility="{Binding HasLastInfo, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+                <TextBlock>
+                    <Run Text="File: "/>
+                    <Run Text="{Binding LastPath, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Bytes: "/>
+                    <Run Text="{Binding LastBytes, Mode=OneWay}"/>
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="Elapsed: "/>
+                    <Run Text="{Binding LastElapsed, Mode=OneWay}"/>
+                </TextBlock>
+            </StackPanel>
+            <TextBlock Text="{Binding ErrorMessage, Mode=OneWay}" Foreground="Tomato" Visibility="{Binding HasError, Mode=OneWay, Converter={StaticResource BoolToVisibility}}"/>
+        </StackPanel>
+    </Grid>
+</Window>

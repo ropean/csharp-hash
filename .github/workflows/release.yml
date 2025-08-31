@@ -14,6 +14,9 @@ on:
 jobs:
   build-and-release:
     runs-on: windows-latest
+    permissions:
+      contents: write
+      pull-requests: read
 
     steps:
       - name: Checkout code
@@ -37,29 +40,7 @@ jobs:
           fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
-        continue-on-error: true
-
-      - name: Release Status
-        if: steps.create_release.outcome == 'failure'
-        run: |
-          echo "⚠️  GitHub release creation failed. This is likely due to token permissions."
-          echo "📝 To fix this, you have a few options:"
-          echo ""
-          echo "1. 🔑 Use a Personal Access Token (PAT):"
-          echo "   - Go to GitHub Settings → Developer settings → Personal access tokens"
-          echo "   - Create a new token with 'repo' permissions"
-          echo "   - Add it as a repository secret named 'PAT_TOKEN'"
-          echo "   - Update the workflow to use: GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}"
-          echo ""
-          echo "2. 🔧 Enable workflows to create releases:"
-          echo "   - Go to Repository Settings → Actions → General"
-          echo "   - Under 'Workflow permissions', select 'Read and write permissions'"
-          echo ""
-          echo "3. 📦 Manual release creation:"
-          echo "   - Download the artifact from this workflow run"
-          echo "   - Create a release manually on GitHub with the downloaded file"
-          echo ""
-          echo "The executable has been successfully built and is available as an artifact."
+        continue-on-error: false
 
       - name: Upload Release Asset (if release creation failed)
         if: steps.create_release.outcome == 'failure'

@@ -54,23 +54,9 @@ rem Publish
 echo Publishing executable...
 
 rem Publish with version handling
-if "%VERSION_TAG%"=="" (
-    echo No VERSION_TAG environment variable found, using default version
-    echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
-    dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
-) else (
-    rem Trim whitespace from VERSION_TAG
-    for /f "tokens=* delims= " %%a in ("%VERSION_TAG%") do set VERSION_TAG_TRIMMED=%%a
-    if "!VERSION_TAG_TRIMMED!"=="" (
-        echo VERSION_TAG is empty/whitespace, using default version
-        echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
-        dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
-    ) else (
-        echo Using VERSION_TAG: !VERSION_TAG_TRIMMED!
-        echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore /p:Version=!VERSION_TAG_TRIMMED!
-        dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore /p:Version=!VERSION_TAG_TRIMMED!
-    )
-)
+@REM echo No VERSION_TAG environment variable found, using default version
+@REM echo Running: dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
+dotnet publish CSharpHash/CSharpHash.csproj -c %CONFIGURATION% -r %RUNTIME% -p:PublishSingleFile=true --self-contained %SELF_CONTAINED% --output "%OUTPUT_DIR%" --no-restore
 
 if errorlevel 1 (
     echo Publish failed with error %errorlevel%

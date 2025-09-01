@@ -19,7 +19,7 @@ public sealed class HashResult
 
 public sealed class HashingService
 {
-    private const int DefaultBufferSize = 1 * 1024 * 1024; // 1 MB
+    private const int DefaultBufferSize = 2 * 1024 * 1024; // 2 MB
 
     public async Task<HashResult> ComputeSha256Async(
         string filePath,
